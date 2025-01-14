@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royalty Points Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+        }
+        footer {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .btn {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        #timer {
+            font-size: 20px;
+            margin-top: 20px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Royalty Points Website</h1>
+    </header>
+
+    <div class="content">
+        <h2>Your Current Points: <span id="points-display">0</span></h2>
+
+        <p><strong>Earn Points by sending a message:</strong></p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdBLcNttYoqf74MQbBgThZgXB1mjIUmYpewqWj6qGv8HNm9cg/viewform?usp=header" target="_blank" class="btn">Send a Message</a>
+
+        <h3>Royalty Items Available:</h3>
+        <ul>
+            <li>Royalty 1 - 500 Points <button class="btn" onclick="buyRoyalty(500)">Buy</button></li>
+            <li>Royalty 2 - 1000 Points <button class="btn" onclick="buyRoyalty(1000)">Buy</button></li>
+            <li>1 Day of Royalty - 1 Point <button class="btn" onclick="buyRoyalty(1)">Buy 1 Day</button></li>
+        </ul>
+
+        <div id="timer" style="display:none;">Your Royalty Session: <span id="time-left">86400</span> seconds</div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Royalty Points Website</p>
+    </footer>
+
+    <script>
+        // Initialize the user's points
+        function initPoints() {
+            let points = localStorage.getItem('points');
+            if (points === null) {
+                points = 0; // Default to 0 points if nothing is saved
+            }
+            document.getElementById('points-display').textContent = points;
+        }
+
+        // Update the user's points
+        function updatePoints(points) {
+            localStorage.setItem('points', points);
+            document.getElementById('points-display').textContent = points;
+        }
+
+        // Function to handle the "Buy" button
+        function buyRoyalty(cost) {
+            let currentPoints = parseInt(localStorage.getItem('points') || '0');
+            if (currentPoints >= cost) {
+                currentPoints -= cost;
+                updatePoints(currentPoints);
+
+                if (cost === 1) {
+                    startRoyaltySession(); // Start 1 day session for 1 point
+                } else {
+                    alert(`You have successfully bought a royalty item for ${cost} points!`);
+                }
+            } else {
+                alert("You don't have enough points to buy this item.");
+            }
+        }
+
+        // Function to start the 1-day royalty session (86400 seconds)
+        function startRoyaltySession() {
+            document.getElementById('timer').style.display = 'block'; // Show the timer
+            let timeLeft = 86400; // 1 day countdown (86400 seconds)
+            document.getElementById('time-left').textContent = timeLeft;
+
+            const countdown = setInterval(function() {
+                timeLeft--;
+                document.getElementById('time-left').textContent = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    alert('Your royalty session has ended!');
+                    document.getElementById('timer').style.display = 'none'; // Hide the timer
+                }
+            }, 1000);
+        }
+
+        // Initialize points on page load
+        window.onload = initPoints;
+    </script>
+</body>
+</html>
